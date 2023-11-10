@@ -16,16 +16,20 @@ void  raycaster(t_general *game)
     {
         double mult;
         bool    hit;
+        //verificando valores iníciais de vetores
+        print_vd(&game->pc->pos, "pc_pos");
+        print_vd(&game->pc->plane, "plane");
+        
 
         hit = false;
         mult = 2 * (pixel/game->render->win_width) - 1;
         
         //define quanto do angulo de visao sera impresso por 1 linha vertical de pixel
         game->ray->cam_pixel = mult_vd2D(&game->pc->plane, mult);
-
+//verificar resultado de função, tentar passar qualquer número no lugar de mult e ver cam_pixel antes e depois
 
         //define vetor final do angulo de visao
-        game->ray->dir = sum_vd2D(&game->pc->dir, &game->ray->cam_pixel);
+        game->ray->dir = sum_vd2D(&game->pc->dir, &game->ray->cam_pixel);//verificar resultado da função, verificar valor de dor e de cam_pixel antes e depois da função 
 
         print_vd(&game->ray->cam_pixel, "cam_pixel");
         print_vd(&game->ray->dir, "ray_dir");
@@ -45,7 +49,7 @@ void  raycaster(t_general *game)
         {
             if(game->ray->dir.x)
                 game->ray->delta.y = fabs(1/game->ray->dir.y);
-        }
+        }//verificar se ray->dir foi atribuído corretamente anteriormente 
 
         print_vd(&game->ray->delta, "ray_delta");
 
@@ -53,7 +57,7 @@ void  raycaster(t_general *game)
         if(game->ray->dir.x < 0)
         {
             game->ray->dist2side.x = (game->pc->pos.x - game->pc->map_pos.x) * game->ray->delta.x;
-            game->ray->step.x = -1;
+            game->ray->step.x = -1;//verificar resultado dessa operação é double ou int
         }
         else
         {
@@ -72,11 +76,19 @@ void  raycaster(t_general *game)
             game->ray->step.x = 1;
         }
 
+        print_vd(&game->ray->dist2side, "dist2sizes");
 
         //funcao DDA
-        game->ray->dda_line = copy_vd2D(&game->ray->dda_line, &game->ray->dist2side);
-        game->ray->map_hit = copy_vd2D(&game->ray->map_hit, (t_vd2D *)&game->pc->map_pos);
+        game->ray->dda_line = copy_vd2D(&game->ray->dda_line, &game->ray->dist2side);//verificar se a função copy funciona corretamentente
         
+        print_vd(&game->ray->dda_line, "dda_line");
+        
+        
+        game->ray->map_hit = copy_vd2D(&game->ray->map_hit, (t_vd2D *)&game->pc->map_pos);
+        //verificar conversão de vi2D pra vd2D
+        
+        print_vd(game->ray->map_hit, "map_cub_hit");
+
         while(!hit)
         {
             if(game->ray->dda_line.x < game->ray->dda_line.y)
@@ -84,6 +96,7 @@ void  raycaster(t_general *game)
                 game->ray->map_hit.x += game->ray->step.x;
                 game->ray->dda_line.x += game->ray->delta.x;
                 game->ray->hit_side = 0;
+            print_vd(game->ray->map_hit, "map_cub_hit");
             }
             else
             {
