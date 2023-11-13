@@ -7,54 +7,61 @@ void print_vd(t_vd2D *this, char *name)
     printf("[Y] -> %f\n", this->y);
 }
 
+void print_vd2(t_vi2D *this, char *name)
+{
+    printf("[%s vector]\n", name);
+    printf("[X] -> %d\n", this->x);
+    printf("[Y] -> %d\n", this->y);
+}
+
 void  raycaster(t_general *game)
 {
-    int pixel;
-
-    pixel = 0;
-    while(pixel < game->render->win_width)
+    game->ray->pixel = 0;
+    while(game->ray->pixel < game->render->win_width)
     {
         double mult;
         bool    hit;
+
         //verificando valores iníciais de vetores
-        print_vd(&game->pc->pos, "pc_pos");
-        print_vd(&game->pc->plane, "plane");
-        
+        //print_vd(&game->pc->pos, "pc_pos");
+        //print_vd(&game->pc->plane, "pc_plane");
+        //print_vd(&game->pc->dir, "pc_dir");
+        //print_vd2(&game->pc->map_pos, "pc_mappos");
+
 
         hit = false;
-        mult = 2 * (pixel/game->render->win_width) - 1;
+        mult = (2 * game->ray->pixel/game->render->win_width) - 1;
+        printf("[mult]\n[int] -> %f\n\n", mult);
         
         //define quanto do angulo de visao sera impresso por 1 linha vertical de pixel
-        game->ray->cam_pixel = mult_vd2D(&game->pc->plane, mult);
-//verificar resultado de função, tentar passar qualquer número no lugar de mult e ver cam_pixel antes e depois
+        mult_vd2D(&game->ray->cam_pixel, &game->pc->plane, mult);
+        //print_vd(&game->ray->cam_pixel, "cam_pixel");
 
         //define vetor final do angulo de visao
-        game->ray->dir = sum_vd2D(&game->pc->dir, &game->ray->cam_pixel);//verificar resultado da função, verificar valor de dor e de cam_pixel antes e depois da função 
-
-        print_vd(&game->ray->cam_pixel, "cam_pixel");
+        sum_vd2D(&game->ray->dir, &game->pc->dir, &game->ray->cam_pixel); 
         print_vd(&game->ray->dir, "ray_dir");
 
-
+        print_vd(&game->ray->delta, "ray_delta");
         //define deltas para pular de cubo em cubo no dda, com consideracao de infinito
-        if(game->ray->dir.x == 0)
-            init_vd2D(&game->ray->delta, 1, 0);
+
+        if((int)game->ray->dir.x == 0)
+            set_vd2D(&game->ray->delta, 1, 0);
         else
         {
-            if(game->ray->dir.y)
+            if((int)game->ray->dir.y)
                 game->ray->delta.x = fabs(1/game->ray->dir.x);
         }
-        if(game->ray->dir.y == 0)
-            init_vd2D(&game->ray->delta, 0, 1);
+        if((int)game->ray->dir.y == 0)
+            set_vd2D(&game->ray->delta, 0, 1);
         else
         {
-            if(game->ray->dir.x)
+            if((int)game->ray->dir.x)
                 game->ray->delta.y = fabs(1/game->ray->dir.y);
         }//verificar se ray->dir foi atribuído corretamente anteriormente 
-
         print_vd(&game->ray->delta, "ray_delta");
 
         //define distancia do player ate as linhas cartinais mais proximas
-        if(game->ray->dir.x < 0)
+        if((int)game->ray->dir.x < 0)
         {
             game->ray->dist2side.x = (game->pc->pos.x - game->pc->map_pos.x) * game->ray->delta.x;
             game->ray->step.x = -1;//verificar resultado dessa operação é double ou int
@@ -64,7 +71,7 @@ void  raycaster(t_general *game)
             game->ray->dist2side.x = (game->pc->map_pos.x + 1 - game->pc->pos.x) * game->ray->delta.x;
             game->ray->step.x = 1;
         }
-        if(game->ray->dir.y < 0)
+        if((int)game->ray->dir.y < 0)
         {
             game->ray->dist2side.y = (game->pc->pos.y - game->pc->map_pos.y) * game->ray->delta.y;
             game->ray->step.y = -1;
@@ -73,30 +80,26 @@ void  raycaster(t_general *game)
         else
         {
             game->ray->dist2side.y = (game->pc->map_pos.y + 1 - game->pc->pos.y) * game->ray->delta.y;
-            game->ray->step.x = 1;
+            game->ray->step.y = 1;
         }
-
-        print_vd(&game->ray->dist2side, "dist2sizes");
+        print_vd(&game->ray->dist2side, "dist2side");
+        print_vd2(&game->ray->step, "step");
 
         //funcao DDA
-        game->ray->dda_line = copy_vd2D(&game->ray->dda_line, &game->ray->dist2side);//verificar se a função copy funciona corretamentente
-        
+        copy_vd2D(&game->ray->dda_line, &game->ray->dist2side);
         print_vd(&game->ray->dda_line, "dda_line");
         
-        
-        game->ray->map_hit = copy_vd2D(&game->ray->map_hit, (t_vd2D *)&game->pc->map_pos);
-        //verificar conversão de vi2D pra vd2D
-        
-        print_vd(game->ray->map_hit, "map_cub_hit");
+        print_vd2(&game->pc->map_pos, "pc_mappos");
+        copy_vi2D(&game->ray->map_hit, &game->pc->map_pos);
+        print_vd2(&game->ray->map_hit, "map_cub_hit");
 
-        while(!hit)
+        while(hit == false)
         {
             if(game->ray->dda_line.x < game->ray->dda_line.y)
             {
                 game->ray->map_hit.x += game->ray->step.x;
                 game->ray->dda_line.x += game->ray->delta.x;
                 game->ray->hit_side = 0;
-            print_vd(game->ray->map_hit, "map_cub_hit");
             }
             else
             {
@@ -104,9 +107,9 @@ void  raycaster(t_general *game)
                 game->ray->dda_line.y += game->ray->delta.y;
                 game->ray->hit_side = 1;
             }
-            if(game->pc->tmp_map[game->pc->map_pos.x][game->pc->map_pos.y] == 1)
+            if(game->pc->tmp_map[game->ray->map_hit.x][game->ray->map_hit.y] == '1')
                 hit = true;
-    
+            print_vd2(&game->ray->map_hit, "map_hit");
         }
         //fim de funcao DDA
 
@@ -116,11 +119,19 @@ void  raycaster(t_general *game)
         else    
             game->ray->perp_dist = fabs(game->ray->map_hit.y - game->pc->pos.y + ((1 - game->ray->step.y) / 2) / game->ray->dir.y);
 
+        printf("[perp_dist]\n[int] -> %f\n\n", game->ray->perp_dist);
+
         //calcula a altura da linha que representa a parede e o comeco e o fim dela
-
         game->ray->wall_height_pixel = game->render->win_height / game->ray->perp_dist;
-        init_vd2D(&game->ray->wall_line, (game->render->win_height / 2 - game->ray->wall_height_pixel / 2), (game->render->win_height / 2 + game->ray->wall_height_pixel / 2));
+        printf("[wall_height_pixel]\n[int] -> %f\n\n", game->ray->wall_height_pixel);
 
+        double line_b_Y = game->render->win_height / 2 - game->ray->wall_height_pixel/2;
+        double line_e_Y = game->render->win_height / 2 + game->ray->wall_height_pixel/2;
+
+        set_vd2D(&game->ray->wall_line, line_b_Y, line_e_Y);
+        print_vd(&game->ray->wall_line, "wall_line");
+        
+        
         //escolhe textura pelo tipo da parede
         int c;
 
@@ -131,14 +142,15 @@ void  raycaster(t_general *game)
         t_vd2D wall_b;
         t_vd2D wall_e;
 
-        init_vd2D(&wall_b, pixel, game->ray->wall_line.x);
-        init_vd2D(&wall_e, pixel, game->ray->wall_line.y);
+        set_vd2D(&wall_b, game->ray->pixel, game->ray->wall_line.x);
+        set_vd2D(&wall_e, game->ray->pixel, game->ray->wall_line.y + 1);
+        print_vd(&wall_b, "wall_b");
+        print_vd(&wall_e, "wall_e");
 
-        draw_line_with_stroke(game, wall_b, wall_e, c);
+        if(game->ray->pixel == 159 || game->ray->pixel == 0 || game->ray->pixel == 319 || game->ray->pixel == 80 || game->ray->pixel == 240)
+            print_ray(game, wall_b, wall_e, c);
 
-        //clear_ray(game->ray);
-
-        pixel++;
+        game->ray->pixel++;
 
     }
 }

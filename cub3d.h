@@ -28,23 +28,23 @@
 # include <math.h> 
 # include <stdbool.h> 
 
+typedef enum s_change
+{
+	NONE,
+	ItoD,
+	DtoI
+}t_change;
+
 typedef struct s_vi2D
 {
 	int	x;
 	int	y;
 }t_vi2D;
 
-struct s_vd2D;
-
-//Metodos vetores
-typedef struct s_vd2D (*f_vd2D)(struct s_vd2D*, struct s_vd2D*); 
-
 typedef struct s_vd2D
 {
 	double	x;
 	double	y;
-/* 	f_vd2D	function[3];
-	struct s_vd2D* self; */
 }t_vd2D;
 
 typedef struct	s_mlx 
@@ -78,14 +78,15 @@ typedef struct s_raycaster
 	t_vd2D	dir;
 	t_vd2D	delta;
 	t_vd2D	dist2side;
-	t_vd2D	step;
+	t_vi2D	step;
 	t_vd2D	dda_line;
-	t_vd2D	map_hit;
+	t_vi2D	map_hit;
 	t_vd2D	wall_line;
 	short int	hit_side;
 	double	perp_dist;
 	double	multiplier;
 	double	wall_height_pixel;
+	int pixel;
 }t_raycaster;
 
 typedef	struct	s_general
@@ -105,12 +106,13 @@ void	check_key_movs(int ley, t_general *game);
 
 //Estruturais para rodar o jogo
 void init_game(t_general	*game);
+void init_pc(t_player *pc);
 void	run_game(t_general	*game);
 void    finish_game(t_general *game);
 
 //Auxiliares de renderizacao de imagem
 void	create_buffer_img(t_general *game);
-
+ void print_ray(t_general *game, t_vd2D bg, t_vd2D end, int color);
 void print_pc(t_general *game);      	//FUNCAO INACABADA, ALTERAR FOR DENTRO DELA
 void	img_pix_put(t_mlx *data, int x, int y, int color);
 void draw_line_with_stroke(t_general *game, t_vd2D bg, t_vd2D end, int color);
@@ -128,7 +130,7 @@ void	move_w(t_general *game);
 void	move_s(t_general *game);
 void	move_a(t_general *game);
 void	move_d(t_general *game);
-void    fill_map(t_general *game);					//FUNCAO TEMPORARIA, ALTERAR PARA AUTOMATICO
+void    fill_map(t_player *pc);					//FUNCAO TEMPORARIA, ALTERAR PARA AUTOMATICO
 
 //Utils
 void    finish_game(t_general *game);
@@ -139,9 +141,18 @@ void  raycaster(t_general *game);
 void clear_ray(t_raycaster *ray);
 
 //Metodos Vectors
-t_vd2D   copy_vd2D(t_vd2D *this, t_vd2D *src);
-void  init_vd2D(t_vd2D *this, double x, double y);
-t_vd2D mult_vd2D(t_vd2D *this, double scalar);
-t_vd2D sum_vd2D(t_vd2D *this, t_vd2D *sum);
+void    copy_vd2D(t_vd2D *this, t_vd2D *src);
+void    copy_vi2D(t_vi2D *this, t_vi2D *src);
+void copy_int_to_double(t_vd2D *dest, t_vi2D *src);
+void copy_double_to_int(t_vi2D *dest, t_vd2D *src);
+void  init_vd2D(t_vd2D *this);
+void  init_vi2D(t_vi2D *this);
+void  set_vd2D(t_vd2D *this, double x, double y);
+void   set_vi2D(t_vi2D *this, double x, double y);
+void mult_vd2D(t_vd2D *mod, t_vd2D *this, double scalar);
+void sum_vd2D(t_vd2D *mod, t_vd2D *this, t_vd2D *sum);
+
+
+void print_array(char (*str)[10]);
 # endif
 

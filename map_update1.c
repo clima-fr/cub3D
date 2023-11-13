@@ -13,16 +13,31 @@
 #include "cub3d.h"
 
 //FUNCAO TEMPORARIA, ALTERAR PARA AUTOMATICO
-void fill_map(t_general *game)
+void fill_map(t_player *pc)
 {
     for(int i = 0; i < 10; i++) 
     {
         if(i == 0 || i == 9)
-            strcpy(game->pc->tmp_map[i], "1111111111");  
+            strcpy(pc->tmp_map[i], "1111111111"); 
+		else if(i == 1 || i == 8 || i == 2 || i == 7)
+            strcpy(pc->tmp_map[i], "1000000001");  
         else
-            strcpy(game->pc->tmp_map[i], "1000000001");  
+            strcpy(pc->tmp_map[i], "1000110001");  
     }
 }
+
+/* 	0123456789
+
+0	1111111111
+1	1P00000001
+2	1000000001
+3	1000110001
+4	1000110001
+5	1000110001
+6	1000110001
+7	1000000001
+8	1000000001
+9	1111111111 */
 
 //FUNCAO TEMPORARIA, ALTERAR PARA AUTOMATICO
 /* void	get_pc(t_general *game)

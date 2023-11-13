@@ -21,7 +21,7 @@ void	img_pix_put(t_mlx *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-void draw_line_with_stroke(t_general *game, t_vd2D bg, t_vd2D end, int color)
+/* void draw_line_with_stroke(t_general *game, t_vd2D bg, t_vd2D end, int color)
 {
     int stroke_width = 2;
     int dx = abs((int)end.x - (int)bg.x);
@@ -57,7 +57,36 @@ void draw_line_with_stroke(t_general *game, t_vd2D bg, t_vd2D end, int color)
             bg.y += sy;
         }
     }
+} */
+
+ void print_ray(t_general *game, t_vd2D bg, t_vd2D end, int color)
+{
+    int dx = abs((int)end.x - (int)bg.x);
+    int dy = abs((int)end.y - (int)bg.y);
+    int sx = (int)bg.x  < (int)end.x ? 1 : -1;
+    int sy = (int)bg.y <  (int)end.y? 1 : -1;
+    int err = (dx > dy ? dx : -dy) / 2;
+    int e2;
+
+    while (1) 
+    {
+        img_pix_put(game->render, (int)bg.x, (int)bg.y, color);
+        if ((int)bg.x == (int)end.x && (int)bg.y == (int)end.y)
+            break;
+        e2 = err;
+        if (e2 > -dx)
+        {
+            err -= dy;
+            bg.x += sx;
+        }
+        if (e2 < dy)
+        {
+            err += dx;
+            bg.y += sy;
+        }
+    }
 }
+
 
 //desenha o teto e o piso ao mesmo tempo
 void draw_horizont(t_general *game, int bx, int by, int color) 

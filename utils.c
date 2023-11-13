@@ -22,51 +22,97 @@ double degree_to_radians(int degree)
     return degree * M_PI / 180;
 }
 
-t_vd2D    copy_vd2D(t_vd2D *this, t_vd2D *src)
+void    copy_vd2D(t_vd2D *this, t_vd2D *src)
 {
     this->x = src->x;
     this->y = src->y;
-    return (*this);
 }
 
-void   init_vd2D(t_vd2D *this, double x, double y)
+void    copy_vi2D(t_vi2D *this, t_vi2D *src)
+{
+    this->x = src->x;
+    this->y = src->y;
+}
+
+//OK
+void   set_vd2D(t_vd2D *this, double x, double y)
 {
     this->x = x;
     this->y = y;
-/*     this->function[0] = copy_vd2D;
-    this->function[1] = sum_vd2D;
-    this->function[2] = mult_vd2D;
-    this->self = */
 }
 
-t_vd2D mult_vd2D(t_vd2D *that, double scalar)
+void   set_vi2D(t_vi2D *this, double x, double y)
 {
-    t_vd2D result;
-
-    result.x = that->x * scalar;
-    result.y = that->y * scalar;
-
-    return result;
+    this->x = x;
+    this->y = y;
 }
 
-t_vd2D sum_vd2D(t_vd2D *that, t_vd2D *sum)
+//OK
+void  init_vd2D(t_vd2D *this)
 {
-    t_vd2D result;
-
-    result.x = that->x + sum->x;
-    result.y = that->y + sum->y;
-
-    return result;
+    this->x = (double)0;
+    this->y = (double)0;
 }
+
+void  init_vi2D(t_vi2D *this)
+{
+    this->x = (int)0;
+    this->y = (int)0;
+}
+
+//OK
+void mult_vd2D(t_vd2D *mod, t_vd2D *that, double scalar)
+{
+    mod->x = that->x * scalar;
+    mod->y = that->y * scalar;
+}
+
+//OK
+void sum_vd2D(t_vd2D *mod, t_vd2D *that, t_vd2D *sum)
+{
+    mod->x = that->x + sum->x;
+    mod->y = that->y + sum->y;
+}
+
+void copy_int_to_double(t_vd2D *dest, t_vi2D *src)
+{
+    dest->x = (double)src->x;
+    dest->y = (double)src->y;
+}
+
+void copy_double_to_int(t_vi2D *dest, t_vd2D *src)
+{
+    dest->x = (int)src->x;
+    dest->y = (int)src->y;
+}
+
 
 void clear_ray(t_raycaster *ray)
 {
-    init_vd2D(&ray->cam_pixel, 0 , 0);
-    init_vd2D(&ray->dir, 0 , 0);
-    init_vd2D(&ray->delta, 0 , 0);
-    init_vd2D(&ray->dist2side, 0 , 0);
-    init_vd2D(&ray->step, 0 , 0);
-    init_vd2D(&ray->dda_line, 0 , 0);
-    init_vd2D(&ray->map_hit, 0 , 0);
-    init_vd2D(&ray->wall_line, 0 , 0);
+    set_vd2D(&ray->cam_pixel, 0 , 0);
+    set_vd2D(&ray->dir, 0 , 0);
+    set_vd2D(&ray->delta, 0 , 0);
+    set_vd2D(&ray->dist2side, 0 , 0);
+    set_vi2D(&ray->step, 0 , 0);
+    set_vd2D(&ray->dda_line, 0 , 0);
+    set_vi2D(&ray->map_hit, 0 , 0);
+    set_vd2D(&ray->wall_line, 0 , 0);
+}
+
+void    putstr(char *str)
+{
+    int i = 0;
+    while(str[i])
+    {
+        write(1, &str[i], 1);
+        i++;
+    }
+    write(1, "\n", 1);
+}
+
+void print_array(char (*str)[10]) 
+{
+    for (int i = 0; i < 10; ++i) {
+        putstr(str[i]);
+    }
 }
