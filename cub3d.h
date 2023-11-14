@@ -13,8 +13,16 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-#define	F_ZERO 0.000001
+#define	COPY 0
+#define	SUM 1
+#define	MULT 2
 #define _USE_MATH_DEFINES 
+#define FACE_W_E 0
+#define FACE_N_S 1
+#define CK_LEFT -1
+#define CK_RIGHT 1
+#define CK_TOP -1
+#define CK_DOWN 1
 
 //# include "structs.h"
 # include "./minilibx-linux/mlx.h"
@@ -109,13 +117,12 @@ void	run_game(t_general	*game);
 void    finish_game(t_general *game);
 
 //Auxiliares de renderizacao de imagem
-void	create_buffer_img(t_general *game);
  void print_ray(t_general *game, t_vd2D bg, t_vd2D end, int color);
 void print_pc(t_general *game);      	//FUNCAO INACABADA, ALTERAR FOR DENTRO DELA
 void	img_pix_put(t_mlx *data, int x, int y, int color);
 void draw_line_with_stroke(t_general *game, t_vd2D bg, t_vd2D end, int color);
 void 	print_map(t_general *game);					//FUNCAO INACABADA, ALTERAR FOR DENTRO DELA E TAMANHO PRE-ESTABELECIDO DO MAPA
-
+void  update_img(t_general *game);
 
 t_vd2D  update_pos2dir(t_general *game, bool mov);
 
@@ -135,8 +142,15 @@ void    finish_game(t_general *game);
 double degree_to_radians(int degree);
 
 //Raycaster
+void set_ray(t_general *game);
+void set_dda(t_general *game);
+void    dda(t_general *game);
+void	set_perp(t_general *game);
+double calc_d2s(t_general *game, bool x, bool negatv);
 void  raycaster(t_general *game);
 void clear_ray(t_raycaster *ray);
+
+
 
 //Metodos Vectors
 void    copy_vd2D(t_vd2D *this, t_vd2D *src);
@@ -147,8 +161,8 @@ void  init_vd2D(t_vd2D *this);
 void  init_vi2D(t_vi2D *this);
 void  set_vd2D(t_vd2D *this, double x, double y);
 void   set_vi2D(t_vi2D *this, double x, double y);
-void mult_vd2D(t_vd2D *mod, t_vd2D *this, double scalar);
-void sum_vd2D(t_vd2D *mod, t_vd2D *this, t_vd2D *sum);
+t_vd2D mult_vd2D(t_vd2D *that, double scalar);
+t_vd2D sum_vd2D(t_vd2D *that, t_vd2D *sum);
 
 
 void print_array(char (*str)[10]);

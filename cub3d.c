@@ -17,17 +17,17 @@ void init_pc(t_player *pc)
 {
 	//ALTERAR PARA AUTOMATICO: armazana o mapa na memoria do jogo
 	fill_map(pc);
-	print_array(pc->tmp_map);
+	//print_array(pc->tmp_map);
 
 	//ALTERAR PARA AUTOMATICO: configura angulo e vetor de rotacao do player
-	pc->ang = degree_to_radians(45);
+	pc->ang = degree_to_radians(90);
 	set_vd2D(&pc->dir, cos(pc->ang), sin(pc->ang));
 
 	//ALTERAR PARA AUTOMATICO: Configura o vetor de plane
 	set_vd2D(&pc->plane, 0.66, 0);
 	
 	//ALTERAR PARA AUTOMATICO: Configura o vetor de posicao inicial
-	set_vd2D(&pc->pos, 2, 2);
+	set_vd2D(&pc->pos, 2.5, 2.5);
 	pc->map_pos.x = (int)2;
 	pc->map_pos.y = (int)2;
 }
@@ -63,6 +63,7 @@ void init_game(t_general	*game)
 	game->ray = malloc(sizeof(t_raycaster));
 
 	//retornar mensagem de erro
+	//AJUSTAR PARA ENDERECO E CONTEUDO
 	if(!game->pc || !game->render || !game->render)
 	{
 		write(1,"struct malloc error\n", 4);
@@ -93,7 +94,7 @@ int	main()
 	//FUNCAO PARA VERIFICAR O MAPA
 
 	init_game(&game);
-	create_buffer_img(&game);
+	raycaster(&game);
 	run_game(&game);
 
 }

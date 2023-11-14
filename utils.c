@@ -61,17 +61,25 @@ void  init_vi2D(t_vi2D *this)
 }
 
 //OK
-void mult_vd2D(t_vd2D *mod, t_vd2D *that, double scalar)
+t_vd2D mult_vd2D(t_vd2D *that, double scalar)
 {
-    mod->x = that->x * scalar;
-    mod->y = that->y * scalar;
+    t_vd2D mod;
+
+    mod.x = that->x * scalar;
+    mod.y = that->y * scalar;
+
+    return(mod);
 }
 
 //OK
-void sum_vd2D(t_vd2D *mod, t_vd2D *that, t_vd2D *sum)
+t_vd2D sum_vd2D(t_vd2D *that, t_vd2D *sum)
 {
-    mod->x = that->x + sum->x;
-    mod->y = that->y + sum->y;
+    t_vd2D mod;
+
+    mod.x = that->x + sum->x;
+    mod.y = that->y + sum->y;
+
+    return(mod);
 }
 
 void copy_int_to_double(t_vd2D *dest, t_vi2D *src)
