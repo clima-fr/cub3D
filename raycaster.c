@@ -117,9 +117,9 @@ void  raycaster(t_general *game)
 
         //verificacao de qual o tipo de parede que bateu
         if(!game->ray->hit_side)
-            game->ray->perp_dist = fabs(game->ray->map_hit.x - game->pc->pos.x + ((1 - game->ray->step.x) / 2) / game->ray->dir.x);
+            game->ray->perp_dist = fabs(game->ray->map_hit.x - game->pc->pos.x + (1 - game->ray->step.x) / 2) / game->ray->dir.x);
         else    
-            game->ray->perp_dist = fabs(game->ray->map_hit.y - game->pc->pos.y + ((1 - game->ray->step.y) / 2) / game->ray->dir.y);
+            game->ray->perp_dist = fabs(game->ray->map_hit.y - game->pc->pos.y + (1 - game->ray->step.y) / 2) / game->ray->dir.y;
 
         printf("[perp_dist]\n[int] -> %f\n\n", game->ray->perp_dist);
 
