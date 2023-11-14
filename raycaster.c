@@ -90,7 +90,9 @@ void  raycaster(t_general *game)
         print_vd(&game->ray->dda_line, "dda_line");
         
         print_vd2(&game->pc->map_pos, "pc_mappos");
-        copy_vi2D(&game->ray->map_hit, &game->pc->map_pos);
+        //ALTERAR PARA COPIAR O FLOOR() de x e y de PC->POS
+        set(&game->ray->map_hit, floor(game->pc->map_pos.x), floor(game->pc->map_pos.y));
+        /*copy_vi2D(&game->ray->map_hit, &game->pc->map_pos);*/
         print_vd2(&game->ray->map_hit, "map_cub_hit");
 
         while(hit == false)
@@ -147,7 +149,8 @@ void  raycaster(t_general *game)
         print_vd(&wall_b, "wall_b");
         print_vd(&wall_e, "wall_e");
 
-        if(game->ray->pixel == 159 || game->ray->pixel == 0 || game->ray->pixel == 319 || game->ray->pixel == 80 || game->ray->pixel == 240)
+        /*if(game->ray->pixel == 159 || game->ray->pixel == 0 || game->ray->pixel == 319 || game->ray->pixel == 80 || game->ray->pixel == 240)*/
+        
             print_ray(game, wall_b, wall_e, c);
 
         game->ray->pixel++;
