@@ -44,24 +44,24 @@ void  raycaster(t_general *game)
         print_vd(&game->ray->delta, "ray_delta");
         //define deltas para pular de cubo em cubo no dda, com consideracao de infinito
 
-        if((int)game->ray->dir.x == 0)
+        if((game->ray->dir.x == F_ZERO)
             set_vd2D(&game->ray->delta, 1, 0);
         else
         {
-            if((int)game->ray->dir.y)
+            if(game->ray->dir.y != F_ZERO)
                 game->ray->delta.x = fabs(1/game->ray->dir.x);
         }
-        if((int)game->ray->dir.y == 0)
+        if(game->ray->dir.y == F_ZERO)
             set_vd2D(&game->ray->delta, 0, 1);
         else
         {
-            if((int)game->ray->dir.x)
+            if(game->ray->dir.x != F_ZERO)
                 game->ray->delta.y = fabs(1/game->ray->dir.y);
         }//verificar se ray->dir foi atribuído corretamente anteriormente 
         print_vd(&game->ray->delta, "ray_delta");
 
         //define distancia do player ate as linhas cartinais mais proximas
-        if((int)game->ray->dir.x < 0)
+        if(game->ray->dir.x < F_ZERO)
         {
             game->ray->dist2side.x = (game->pc->pos.x - game->pc->map_pos.x) * game->ray->delta.x;
             game->ray->step.x = -1;//verificar resultado dessa operação é double ou int
@@ -71,7 +71,7 @@ void  raycaster(t_general *game)
             game->ray->dist2side.x = (game->pc->map_pos.x + 1 - game->pc->pos.x) * game->ray->delta.x;
             game->ray->step.x = 1;
         }
-        if((int)game->ray->dir.y < 0)
+        if(game->ray->dir.y < F_ZERO)
         {
             game->ray->dist2side.y = (game->pc->pos.y - game->pc->map_pos.y) * game->ray->delta.y;
             game->ray->step.y = -1;
