@@ -13,9 +13,7 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-#define	COPY 0
-#define	SUM 1
-#define	MULT 2
+#define	F_ZERO 0.000001
 #define _USE_MATH_DEFINES 
 
 //# include "structs.h"
