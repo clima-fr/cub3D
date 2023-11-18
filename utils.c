@@ -82,6 +82,24 @@ t_vd2D sum_vd2D(t_vd2D *that, t_vd2D *sum)
     return(mod);
 }
 
+t_vd2D sub_vd2D(t_vd2D *that, t_vd2D *sum)
+{
+    t_vd2D mod;
+
+    mod.x = that->x - sum->x;
+    mod.y = that->y - sum->y;
+
+    return(mod);
+}
+
+t_vd2D rot_vd2D(t_vd2D *that, double rad)
+{    
+    t_vd2D mod;
+    mod.x = that->x * cos(rad) - that->y * sin(rad);
+    mod.y = that->x * sin(rad) + that->y * cos(rad);
+    return mod;
+}
+
 void copy_int_to_double(t_vd2D *dest, t_vi2D *src)
 {
     dest->x = (double)src->x;

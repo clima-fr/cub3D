@@ -35,12 +35,19 @@
 # include <math.h> 
 # include <stdbool.h> 
 
-/* typedef enum s_change
+typedef enum rot
 {
-	NONE,
-	ItoD,
-	DtoI
-}t_change; */
+	LEFT,
+	RIGHT
+}t_rot;
+
+typedef enum mov
+{
+	W_FRONT,
+	S_BACK,
+	A_LEFT,
+	D_RIGHT
+}t_mov;
 
 typedef struct s_data
 {
@@ -122,6 +129,12 @@ int	handler_win(int key, t_general *game);
 int handler_press(int key, t_general *game);
 void    check_hooks(t_general	*game);
 void	check_key_movs(int ley, t_general *game);
+void reset_rad(t_player *pc);
+void update_ang(t_player *pc, t_rot rot);
+void update_pos(t_player *pc, t_mov mov);
+void update_dir(t_player *pc);
+void update_plane(t_player  *pc, int mov_type);
+void rotating(t_player *pc, t_rot type);
 
 //Estruturais para rodar o jogo
 void init_game(t_general	*game);
@@ -176,6 +189,8 @@ void  set_vd2D(t_vd2D *this, double x, double y);
 void   set_vi2D(t_vi2D *this, double x, double y);
 t_vd2D mult_vd2D(t_vd2D *that, double scalar);
 t_vd2D sum_vd2D(t_vd2D *that, t_vd2D *sum);
+t_vd2D sub_vd2D(t_vd2D *that, t_vd2D *sum);
+t_vd2D rot_vd2D(t_vd2D *that, double rad);
 
 
 void print_array(char (*str)[10]);

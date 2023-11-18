@@ -37,17 +37,18 @@ int handler_press(int key, t_general *game)
 void    check_key_movs(int key, t_general *game)
 {
   	if (key == XK_Left)
-		move_fov_left(game);
+		rotating(game->pc, LEFT);
     else if(key == XK_Right)
-        move_fov_right(game);
+        rotating(game->pc, RIGHT);
     else if (key == XK_w)
-        move_w(game);
+        update_pos(game->pc, W_FRONT);
 	else if (key == XK_s)
-		move_s(game);
+		update_pos(game->pc, S_BACK);
 	else if (key == XK_a)
-		move_a(game);
+		update_pos(game->pc, A_LEFT);
 	else if (key == XK_d)
-		move_d(game);
+		update_pos(game->pc, D_RIGHT);
+	raycaster(game);
 }
 
 void    check_hooks(t_general	*game)
