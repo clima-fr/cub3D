@@ -16,7 +16,8 @@ void print_vd2(t_vi2D *this, char *name)
 
 void set_perp(t_general *game)
 {
-    if(game->ray->hit_side == FACE_W_E)
+    printf("_________SET PERP__________\n");
+    if(game->ray->hit_side == V_FACE)
     {
         game->ray->perp_dist = fabs(game->ray->map_hit.x - game->pc->pos.x + ((1 - game->ray->step.x) / 2));
         game->ray->perp_dist /= game->ray->dir.x;
@@ -29,6 +30,7 @@ void set_perp(t_general *game)
     printf("[perp_dist]\n[int] -> %f\n\n", game->ray->perp_dist);
 }
 
+
 void    dda(t_general *game)
 {
     bool hit;
@@ -38,11 +40,13 @@ void    dda(t_general *game)
     /*talvez nao precise fazer a copia ja que ambos vetores sao
     usados para o dda apenas*/
 
+    printf("__________RUN DDA__________\n");
+
     copy_vd2D(&game->ray->dda_line, &game->ray->dist2side);
-    //print_vd(&game->ray->dda_line, "RAY_dda_line");
+    print_vd(&game->ray->dda_line, "RAY_dda_line");
 
     copy_vi2D(&game->ray->map_hit, &game->pc->map_pos);
-    //print_vd2(&game->ray->map_hit, "RAY_hit_side");
+    printf("[hit_side]\n[int] -> %hd\n\n", game->ray->hit_side);
 
     while(!hit)
     {
@@ -50,38 +54,42 @@ void    dda(t_general *game)
         {
             game->ray->dda_line.x += game->ray->delta.x;
             game->ray->map_hit.x += game->ray->step.x;
-            game->ray->hit_side = FACE_W_E;
+            game->ray->hit_side = V_FACE;
         }
         else
         {
             game->ray->dda_line.y += game->ray->delta.y;
             game->ray->map_hit.y += game->ray->step.y;
-            game->ray->hit_side = FACE_N_S;
+            game->ray->hit_side = H_FACE;
         }
         if(game->pc->tmp_map[game->ray->map_hit.x][game->ray->map_hit.y] == '1')
             hit = true;
     }
-    //print_vd(&game->ray->dda_line, "RAY_dda_line");
-    //print_vd2(&game->ray->dda_line, "RAY_hit_side");
+    print_vd(&game->ray->dda_line, "RAY_dda_line");
+    printf("[hit_side]\n[int] -> %hd\n\n", game->ray->hit_side);
 }
 
 double calc_d2s(t_general *game, bool x, bool negatv)
 {
     if(x && negatv)
-        return (game->pc->pos.x - game->pc->map_pos.x) * game->ray->delta.x;
+        return ((game->pc->pos.x - game->pc->map_pos.x) * game->ray->delta.x);
     else if(x && !negatv)
-        return (game->pc->map_pos.x + 1 - game->pc->pos.x) * game->ray->delta.x;
+        return ((game->pc->map_pos.x + 1 - game->pc->pos.x) * game->ray->delta.x);
     else if(!x && negatv)
-        return (game->pc->pos.y - game->pc->map_pos.y) * game->ray->delta.y;
+        return ((game->pc->pos.y - game->pc->map_pos.y) * game->ray->delta.y);
     else if(!x && !negatv)
-        return (game->pc->map_pos.y + 1 - game->pc->pos.y) * game->ray->delta.y;
+        return ((game->pc->map_pos.y + 1 - game->pc->pos.y) * game->ray->delta.y);
+    return(0);
 }
 
 void set_dda(t_general *game)
 {
-    game->ray->delta.x = fabs(1 / game->ray->dir.x);
-    game->ray->delta.y = fabs(1 / game->ray->dir.y); 
-    //print_vd(&game->ray->delta, "RAY_delta");
+    printf("__________SET DDA__________\n");
+
+    game->ray->delta.x = (game->ray->dir.x == 0) ? 1e30 : fabs(1 / game->ray->dir.x);
+    game->ray->delta.y = (game->ray->dir.y == 0) ? 1e30 : fabs(1 / game->ray->dir.y);
+    
+    print_vd(&game->ray->delta, "RAY_delta");
     
     if(game->ray->dir.x < 0)
     {
@@ -104,8 +112,8 @@ void set_dda(t_general *game)
         game->ray->dist2side.y = calc_d2s(game, false, false);
         game->ray->step.y = CK_DOWN;
     }
-    //print_vd(&game->ray->dist2side, "RAY_dist2side");
-    //print_vd2(&game->ray->step, "RAY_step");
+    print_vd(&game->ray->dist2side, "RAY_dist2side");
+    print_vd2(&game->ray->step, "RAY_step");
 }
 
 void set_ray(t_general *game)
@@ -113,75 +121,121 @@ void set_ray(t_general *game)
     double mult;
     t_vd2D cam_pixel;
 
+    printf("__________SET RAY__________\n");
+
     mult = (2 * game->ray->pixel/game->render->win_width) - 1;
-    //printf("[mult]\n[int] -> %f\n\n", mult);
+    printf("[mult]\n[int] -> %f\n\n", mult);
     
     cam_pixel = mult_vd2D(&game->pc->plane, mult);
-    //print_vd(&game->ray->cam_pixel, "cam_pixel");
+    print_vd(&cam_pixel, "cam_pixel");
 
     game->ray->dir = sum_vd2D(&game->pc->dir, &cam_pixel); 
-    //print_vd(&game->ray->dir, "RAY_dir");
+    print_vd(&game->ray->dir, "RAY_dir");
 
 }
+
+
+//ESTUDAR ESSAS FUNCOES-------------------------------------------------------------------
+
+
+
+/*CALCULA ALTURA DA PAREDE DE ACORDO COM A PERP_DIST E 
+A POSICAO DE INICIO E FIM DA PAREDE NO CANVAS*/
+void	calculate_height_wall(t_general *game)
+{
+    printf("_______SET HEGHT WALL______\n");
+	game->ray->wall_height_pixel = fabs(((double)game->render->win_height / game->ray->perp_dist));
+		
+	game->ray->line_b = game->render->win_height / 2 - game->ray->wall_height_pixel/2;
+	
+	game->ray->line_e = game->render->win_height / 2 + game->ray->wall_height_pixel/2;
+
+	printf("[wall_height_pixel]\n[int] -> %f\n\n", game->ray->wall_height_pixel);
+
+    //limita o tamanho da parede a no maximo o tamanho da janela
+	if(game->ray->line_b < 0)
+		game->ray->line_b = 0;
+	if(game->ray->line_e > game->render->win_height)
+		game->ray->line_e = game->render->win_height - 1;
+
+    t_vd2D begin;
+    set_vd2D(&begin, game->ray->pixel, game->ray->line_b);
+    t_vd2D end;
+    set_vd2D(&end, game->ray->pixel, game->ray->line_e);
+    
+    print_ray(game, begin, end, 0x646400);
+}
+
+/* void get_tex(t_general *game)
+{
+    //1 subtracted from it so that texture 0 can be used!
+    int texNum = game->pc->tmp_map[game->render->map_hit.x][game->render->map_hit.y] - 1; 
+
+    //calculate value of wallX
+    double wallX; //where exactly the wall was hit
+    if (game->ray->hit_side == 0) 
+        wallX = game->pc->pos.y + game->ray->perp_dist * game->ray->dir.y;
+    else
+        wallX = game->pc->pos.x + game->ray->perp_dist * game->ray->dir.x;
+    wallX -= floor((wallX));
+
+    //x coordinate on the texture
+    int texX = int(wallX * double(64));
+    if(game->ray->hit_side == 0 && game->ray->dir.x > 0)
+        texX = 64 - texX - 1;
+    if(game->ray->hit_side== 1 && game->ray->dir.y < 0)
+        texX = 64 - texX - 1;
+
+    // How much to increase the texture coordinate per screen pixel
+    double step = 1.0 * 64 / game->ray.wall_height_pixel;
+    
+    // Starting texture coordinate
+    double texPos = (game->ray->line_b - h / 2 + lineHeight / 2) * step;
+    for(int y = game->ray->line_b; y < game->ray->line_e; y++)
+    {
+        // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
+        int texY = (int)texPos & (64 - 1);
+        texPos += step;
+        Uint32 color = texture[texNum][64 * texY + texX];
+
+        //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+        if(game->ray->hit_side == 1) 
+            color = (color >> 1) & 8355711;
+        buffer[y][x] = color;
+    }
+} */
 
 //-----------------------------------------------------------------------------------------------
 
 void  raycaster(t_general *game)
 {
     update_img(game);
-	while (game->ray->pixel < game->render->win_width)
+    game->ray->pixel = 0;
+	while (game->ray->pixel < game->render->win_width )
 	{
 		//ATUALIZAR O MAP_POS JUNTO COM O POS DO PLAYER, OU USAR ELE NO LUGAR DO MAP_HIT E ATUALIZAR AQUI
-		
-        /* print_vd(&game->pc->pos, "PC_pos");
+        print_vd(&game->pc->pos, "PC_pos");
         print_vd(&game->pc->plane, "PC_plane");
         print_vd(&game->pc->dir, "PC_dir");
-        print_vd2(&game->pc->map_pos, "PC_mappos"); */
+        print_vd2(&game->pc->map_pos, "PC_mappos");
+        printf("-------------------------RAYCASTER BEGIN(%d)------------------------\n", game->ray->pixel);
+        printf("|                                                                   |\n");
+        printf("|                                                                   |\n");
 
         set_ray(game);
+        set_dda(game);
 		dda(game);
         set_perp(game);
-
-        //calcular as alturas
-        //calcular os pixels em colunas
+        calculate_height_wall(game);
+        //get_tex(game);
 		game->ray->pixel++;
 	}
 	mlx_clear_window(game->render->mlx, game->render->win);
     mlx_put_image_to_window(game->render->mlx, game->render->win, game->render->img, 0, 0);
 	game->ray->pixel = 0;
-	
-    //VERIFICAR NECESSIDADE DE RETORNO AO FIM
-    //return (0);
-
-//-----------------------------------------------------------------------
-
-        //calcula a altura da linha que representa a parede e o comeco e o fim dela
-        game->ray->wall_height_pixel = game->render->win_height / game->ray->perp_dist;
-        printf("[wall_height_pixel]\n[int] -> %f\n\n", game->ray->wall_height_pixel);
-
-        double line_b_Y = game->render->win_height / 2 - game->ray->wall_height_pixel/2;
-        double line_e_Y = game->render->win_height / 2 + game->ray->wall_height_pixel/2;
-
-        set_vd2D(&game->ray->wall_line, line_b_Y, line_e_Y);
-        print_vd(&game->ray->wall_line, "wall_line");
-        
-        
-        //escolhe textura pelo tipo da parede
-        int c;
-
-        c = 0x0000FFFF;
-        if(!game->ray->hit_side)
-            c = 0x0000FF00;
-
-        t_vd2D wall_b;
-        t_vd2D wall_e;
-
-        set_vd2D(&wall_b, game->ray->pixel, game->ray->wall_line.x);
-        set_vd2D(&wall_e, game->ray->pixel, game->ray->wall_line.y + 1);
-        print_vd(&wall_b, "wall_b");
-        print_vd(&wall_e, "wall_e");
-
 }
+
+
 
 /*calculos:
 

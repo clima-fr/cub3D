@@ -17,12 +17,13 @@
 #define	SUM 1
 #define	MULT 2
 #define _USE_MATH_DEFINES 
-#define FACE_W_E 0
-#define FACE_N_S 1
+#define V_FACE 0
+#define H_FACE 1
 #define CK_LEFT -1
 #define CK_RIGHT 1
 #define CK_TOP -1
 #define CK_DOWN 1
+#define TEXTURE_SIZE 64
 
 //# include "structs.h"
 # include "./minilibx-linux/mlx.h"
@@ -34,12 +35,21 @@
 # include <math.h> 
 # include <stdbool.h> 
 
-typedef enum s_change
+/* typedef enum s_change
 {
 	NONE,
 	ItoD,
 	DtoI
-}t_change;
+}t_change; */
+
+typedef struct s_data
+{
+	void	*img;
+	char	*addr;
+	int		bpp;
+	int		line_len;
+	int		endian;
+}			t_data;
 
 typedef struct s_vi2D
 {
@@ -88,6 +98,9 @@ typedef struct s_raycaster
 	t_vd2D	dda_line;
 	t_vi2D	map_hit;
 	t_vd2D	wall_line;
+	double	line_b;
+	double	line_e;
+	t_vd2D  tex;
 	short int	hit_side;
 	double	perp_dist;
 	double	multiplier;
@@ -149,7 +162,7 @@ void	set_perp(t_general *game);
 double calc_d2s(t_general *game, bool x, bool negatv);
 void  raycaster(t_general *game);
 void clear_ray(t_raycaster *ray);
-
+void	calculate_height_wall(t_general *game);
 
 
 //Metodos Vectors

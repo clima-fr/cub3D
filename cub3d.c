@@ -27,7 +27,7 @@ void init_pc(t_player *pc)
 	set_vd2D(&pc->plane, 0.66, 0);
 	
 	//ALTERAR PARA AUTOMATICO: Configura o vetor de posicao inicial
-	set_vd2D(&pc->pos, 2.5, 2.5);
+	set_vd2D(&pc->pos, 2, 2);
 	pc->map_pos.x = (int)2;
 	pc->map_pos.y = (int)2;
 }
@@ -42,6 +42,7 @@ void init_render(t_mlx *render)
 	render->mlx = mlx_init();
 	render->win = mlx_new_window(render->mlx, render->win_width, render->win_height, "ba_tits");
 }
+
 
 void init_raycaster(t_raycaster *ray)
 {
@@ -72,7 +73,6 @@ void init_game(t_general	*game)
 	init_pc(game->pc);
 	init_render(game->render);
 	init_raycaster(game->ray);
-
 }
 
 

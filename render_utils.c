@@ -110,7 +110,7 @@ void draw_horizont(t_general *game, int bx, int by, int color)
 
 void  update_img(t_general *game)
 {
-    if (game->render->img);
+    if (game->render->img)
 		mlx_destroy_image(game->render->mlx, game->render->img);
 	game->render->img = mlx_new_image(game->render->mlx, game->render->win_width, game->render->win_height);
 	game->render->addr_img = mlx_get_data_addr(game->render->img, &game->render->bits_per_pixel, &game->render->line_length, &game->render->endian);

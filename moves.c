@@ -39,7 +39,7 @@ void	move_fov_left(t_general *game)
     reset_rad(&game->pc->ang);
     game->pc->dir.x = cos(game->pc->ang) * 50;
     game->pc->dir.y = sin(game->pc->ang) * 50;
-    create_buffer_img(game);
+    update_img(game);
 }
 
 void	move_fov_right(t_general *game)
@@ -48,36 +48,36 @@ void	move_fov_right(t_general *game)
    reset_rad(&game->pc->ang);
     game->pc->dir.x = cos(game->pc->ang) * 50;
     game->pc->dir.y = sin(game->pc->ang) * 50;
-    create_buffer_img(game);
+    update_img(game);
 }
 
 void	move_w(t_general *game)
 {
     game->pc->pos = update_pos2dir(game, true);
-    create_buffer_img(game);
+    update_img(game);
 }
 
 void	move_s(t_general *game)
 {
-    game->pc->pos.x -=  game->pc->dir.x * 0.1;
-    game->pc->pos.y -=  game->pc->dir.y * 0.1;
-    create_buffer_img(game);
+    game->pc->pos.x -=  game->pc->dir.x * 100;
+    game->pc->pos.y -=  game->pc->dir.y * 100;
+    update_img(game);
 }
 
 void	move_a(t_general *game)
 {
     double rightX = -(game->pc->dir.y);
     double rightY = game->pc->dir.x;
-    game->pc->pos.x -= rightX * 0.1;
-    game->pc->pos.y -= rightY * 0.1;
-    create_buffer_img(game);
+    game->pc->pos.x -= rightX * 100;
+    game->pc->pos.y -= rightY * 100;
+    update_img(game);
 }
 
 void	move_d(t_general *game)
 {
     double rightX = -(game->pc->dir.y);
     double rightY = game->pc->dir.x;
-    game->pc->pos.x += rightX * 0.1;
-    game->pc->pos.y += rightY * 0.1;
-    create_buffer_img(game);
+    game->pc->pos.x += rightX * 100;
+    game->pc->pos.y += rightY * 100;
+    update_img(game);
 }
