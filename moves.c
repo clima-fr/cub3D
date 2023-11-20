@@ -48,16 +48,19 @@ void update_ang(t_player *pc, t_rot rot)
 void update_pos(t_player *pc, t_mov mov)
 {
 	t_vd2D inv;
+	t_vd2D tmp;
 
 	set_vd2D(&inv, -(pc->dir.y), pc->dir.x);
+	inv = mult_vd2D(&inv, 100);
+	tmp = mult_vd2D(&pc->dir, 100);
 	if(mov == W_FRONT)
-		pc->pos = sum_vd2D(&pc->pos, (mult_vd2D(&pc->dir, 100)));
+				pc->pos = sum_vd2D(&pc->pos,&tmp);
 	else if(mov == S_BACK)
-		pc->pos = sub_vd2D(&pc->pos, mult_vd2D(&pc->dir, 100));
+		pc->pos = sub_vd2D(&pc->pos, &tmp);
 	else if(mov == A_LEFT)
-		pc->pos = sub_vd2D(&pc->pos, mult_vd2D(&inv, 100));
+		pc->pos = sub_vd2D(&pc->pos, &inv);
 	else if(mov == D_RIGHT)
-		pc->pos = sum_vd2D(&pc->pos, mult_vd2D(&inv, 100));
+		pc->pos = sum_vd2D(&pc->pos, &inv);
 }
 
 void update_dir(t_player *pc)
