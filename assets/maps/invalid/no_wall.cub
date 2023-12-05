@@ -1,0 +1,21 @@
+NO assets/sprites/north_wall.xpm
+SO assets/sprites/south_wall.xpm
+EA assets/sprites/east_wall.xpm
+WE assets/sprites/west_wall.xpm
+
+F 20,20,20
+C 200,200,200
+
+00000
+00000
+00S00
+00000
+00000
+00000
+00000
+00000
+00000
+00000
+00000
+00000
+00000

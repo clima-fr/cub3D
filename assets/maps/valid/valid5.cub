@@ -1,0 +1,14 @@
+F 139,99,58
+C 171,154,137
+
+NO assets/sprites/north_wall.xpm
+SO assets/sprites/south_wall.xpm
+EA assets/sprites/east_wall.xpm
+WE assets/sprites/west_wall.xpm
+
+111111
+100001
+101001
+10N101
+100001
+111111
