@@ -47,7 +47,7 @@ make
 
 ## Contributors
 
->I would like to extend my deepest gratitude to the `@clima-fr` for the remarkable partnership.
+>I would like to extend my deepest gratitude to the `@pin3dev` for the remarkable partnership.
 
-* Ívany Pinheiro aka [`@pin3dev`](https://github.com/pin3dev)
 * Clara Franco aka [`@clima-fr`](https://github.com/clima-fr)
+* Ívany Pinheiro aka [`@pin3dev`](https://github.com/pin3dev)
