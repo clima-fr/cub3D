@@ -1,18 +1,10 @@
-NO assets/sprites/north_wall.xpm
-SO assets/sprites/south_wall.xpm
-EA assets/sprites/east_wall.xpm
-WE assets/sprites/west_wall.xpm
+NO assets/sprites/nowall.xpm
+SO assets/sprites/sowall.xpm
+EA assets/sprites/eawall.xpm
+WE assets/sprites/wewall.xpm
 
-11111
-10001
-10S01
-10001
-10001
-10001
-11001
-10001
-10001
-10001
-10001
-10001
-11111
+11111111
+10000001
+10S00001
+10000001
+11111111
