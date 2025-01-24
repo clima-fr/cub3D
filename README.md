@@ -16,7 +16,7 @@ My first RayCaster with miniLibX 🔫
 
 ## Overview
 
-This project is a simplified implementation of a RayCaster, adhering to the `cub3D` project curriculum of 42 school. This was carried out following the rules described in the [`subject`](https://cdn.intra.42.fr/pdf/pdf/113054/en.subject.pdf) version 10 released 2023.
+This project is a simplified implementation of a RayCaster, adhering to the `cub3D` project curriculum of 42 school. This was carried out following the rules described in the subject version 10 released 2023.
 
 ## Mandatory Features
 
